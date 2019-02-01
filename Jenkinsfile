@@ -21,7 +21,11 @@ pipeline {
       }
       steps {
         sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
-        junit 'test-reports/results.xml'
+      }
+      post {
+        always {
+          junit 'test-reports/results.xml'
+        }
       }
     }
     stage('Deliver') {
@@ -33,7 +37,11 @@ pipeline {
       }
       steps {
         sh 'pyinstaller --onefile sources/add2vals.py'
-        archiveArtifacts 'dist/add2vals'
+      }
+      post {
+        success {
+          archiveArtifacts 'dist/add2vals'
+        }
       }
     }
   }
